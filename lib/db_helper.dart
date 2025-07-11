@@ -52,11 +52,33 @@ class DBHelper {
     return rowsEffected > 0;
   }
 
-  Future<List<TodoModel>> fetchAllTodo() async {
+  Future<List<TodoModel>> fetchAllTodo({required int filterType}) async {
     var db = await initDB();
 
-    return TodoModel.getAllTodo(await db.query(TABLE_NAME));
+    ///1-> low, 2-> medium, 3-> high
+    ///4-> completed, 5-> pending
+    ///0-> all
+    ///combo filter
 
+   if (filterType == 1) {
+      return TodoModel.getAllTodo(
+        await db.query(
+          TABLE_NAME,
+          where: "$COLUMN_TODO_PRIORITY=?",
+          whereArgs: ["1"],
+        ),
+      );
+    } else if (filterType == 4) {
+      return TodoModel.getAllTodo(
+        await db.query(
+          TABLE_NAME,
+          where: "$COLUMN_TODO_IS_COMPLETED = ? and $COLUMN_TODO_PRIORITY = ?",
+          whereArgs: ["1", "3"],
+        ),
+      );
+    } else {
+     return TodoModel.getAllTodo(await db.query(TABLE_NAME));
+   }
   }
 
   Future<bool> updateTaskCompletion({

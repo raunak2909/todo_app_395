@@ -1,9 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:todo_app_395/db_helper.dart';
+import 'package:todo_app_395/todo_provider.dart';
 
 import 'home_page.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => TodoProvider(dbHelper: DBHelper.getInstance()),
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -21,4 +29,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
